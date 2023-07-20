@@ -87,20 +87,31 @@ class DataCleaner:
         # 去除<转发微博>
         self.clean_only_repost_data(filt_res)
 
+        # 将</p></br><p>的错误数据，拆分成</p></br>\n<p>
+        fixed_res = []
+        for d in filt_res:
+            while d.find('</p></br><p>') != -1:
+                pos = d.find('</p></br><p>')
+                left_part = d[:pos+9]
+                right_part = d[pos+9:]
+                fixed_res.append(left_part)
+                d = right_part
+            fixed_res.append(d)
+
         # 全局去重
         tu_map = {}
-        for idx in range(0, len(filt_res)):
-            tu = self.get_time_userid_in_data(filt_res[idx])
+        for idx in range(0, len(fixed_res)):
+            tu = self.get_time_userid_in_data(fixed_res[idx])
             key = tu[0]+'-'+tu[1]
             tu_map[key] = idx
         untapped_res = []
         for k in tu_map.keys():
-            untapped_res.append(filt_res[tu_map[k]])
+            untapped_res.append(fixed_res[tu_map[k]])
 
         # 转发链聚合
         accumulated_res = self.accumulate_multy_repost(untapped_res)
         per = round(len(accumulated_res) / len(data) * 100, 2)
-        print('前后数量比较: 原始：', len(data), ' 过滤：', len(filt_res), ' 去重：', len(untapped_res), ' 合并转发链：', len(accumulated_res), ' 缩水比：', per, '%')
+        print('前后数量比较: 原始：', len(data), ' 过滤：', len(filt_res), '修复：', len(fixed_res), ' 去重：', len(untapped_res), ' 合并转发链：', len(accumulated_res), ' 缩水比：', per, '%')
         return accumulated_res
 
     def clean_only_repost_data(self, data):
@@ -207,7 +218,7 @@ def clean(args):
 
 def test():
     cleaner = DataCleaner()
-    dir = os.path.dirname(os.path.abspath(__file__)) + '/test_export/group_high.html'
+    dir = os.path.dirname(os.path.abspath(__file__)) + '/test_export/2023-07-20'
     cleaner.traverse_directory(dir)
 
 if __name__ == '__main__':

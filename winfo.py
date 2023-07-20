@@ -26,7 +26,7 @@ class Winfo:
 <p><span style="color:red;">{}</span><a href="https://m.weibo.cn/status/{}">(查看原文)</a> {} {}</p>
 <p>{}</p>
 <p><span style="color:green;">转发了 </span><span style="color:red;">{}</span> {}</p>
-    <p>{}</p>
+<p>{}</p>
 </br>
 """.format(self.user.screen_name, self.id, utils.format_time(self.created_at), self.user.id, self.text,
                        rs_user.screen_name, utils.format_time(rs.created_at), rs.text)

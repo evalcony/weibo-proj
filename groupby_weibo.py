@@ -89,37 +89,9 @@ class GroupByWeibo:
             for w in winfo_list:
                 str = w.as_weibo()
                 f.write(str)
+            f.write('\n')
             f.write(original_content)
 
-    def _save_after(self, prefix, file_name, mode, winfo_list):
-        root_dir = os.path.dirname(os.path.abspath(__file__))
-        directory = root_dir+'/export/weibo/group/'+prefix
-        # 防止路径不存在
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        with open(directory+'/' + file_name, mode) as f:
-            for winfo in winfo_list:
-                str = winfo.as_weibo()
-                f.write(str)
-
-    def _test_group(self, winfo_list):
-        if self.user_group_set == {}:
-            return
-
-        gs = self.user_group_set
-        for g_name, gs_id_set in gs.items():
-            print(f'{g_name} {gs_id_set}')
-            if len(gs_id_set) == 0:
-                continue
-            print("*" * 30)
-            for winfo in winfo_list:
-                id = winfo.user.id
-                print(f'{id} {winfo.user.screen_name}')
-                if str(id) in gs_id_set:
-                    if g_name not in self.result_dict:
-                        self.result_dict[g_name] = []
-                    self.result_dict[g_name].append(winfo)
 
 def test_build_winfo(id, name):
     from winfo import Winfo
