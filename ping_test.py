@@ -25,8 +25,18 @@ def request_for_v2ex():
     return response.content
 
 def request_for_baidu():
-    response = requests.get("https://www.baidu.com", verify = False, )
-    return response.content
+    try:
+        response = requests.get("https://www.baidu.com",)
+        return response.content
+    except Exception:
+        return 'network exception'
+
+def network_ping():
+    try:
+        response = requests.get("https://www.baidu.com",)
+        return True
+    except Exception:
+        return False
 
 def ping(args):
     text = ''

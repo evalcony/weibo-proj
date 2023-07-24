@@ -10,6 +10,12 @@ def read_config(name):
     config.read(file_path(name))
     return config
 
+def write_config(config, name):
+    # 将修改后的配置写回文件
+    config_path = file_path(name)
+    with open(config_path, 'w') as configfile:
+        config.write(configfile)
+
 def file_path(name):
     # 获取当前文件所在的根路径
     root_dir = os.path.dirname(os.path.abspath(__file__))

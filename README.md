@@ -15,6 +15,7 @@ crontab -e
 - auto_notify.py 网络监控、通知程序，当无法正常访问 api 时，会发送微信消息通知
 - ping_test.py ping 接口的程序，快速检测接口是否能 ping 通
 - fbw_manager.py forbidden_words.txt 的文件操作接口，可以在终端中以命令行的方式操作 forbidden_words.txt 文件数据
+- config_manager.py 操作config.ini的入口
 
 各程序的执行参数，可以通过 -h 查看。
 

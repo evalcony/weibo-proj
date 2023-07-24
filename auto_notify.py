@@ -3,6 +3,7 @@ from datetime import datetime
 import weibo
 from mastodon import Mastodon
 
+
 def work():
     notify_msg = ''
     expired = False
@@ -37,6 +38,7 @@ def work():
         print(response.text)
     else:
         print('接口正常，未过期')
+    return expired
 
 if __name__ == '__main__':
     work()

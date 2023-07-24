@@ -1,6 +1,7 @@
 import auto_notify
 from mastodon import Mastodon
 from weibo import Weibo
+import ping_test
 
 
 def task():
@@ -12,5 +13,11 @@ def task():
         t.processor_work()
 
 if __name__ == '__main__':
-    auto_notify.work()
-    task()
+    # 网络环境检测
+    ping_result = ping_test.network_ping()
+    if not ping_result:
+        print('network exception')
+    else:
+        expired = auto_notify.work()
+        if not expired:
+            task()

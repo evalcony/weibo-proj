@@ -46,6 +46,8 @@ class Mastodon:
         group_set = {}
         # Todo: 我的mastodon比较特殊，所以很个人的代码，这里就删掉了
         # 请使用者根据个人情况，自行编写相关代码
+        user_id_list = ['109329072524233310']
+        group_set['老周'] = set(user_id_list)
         return group_set
 
     # 每次结束后，更新配置文件
