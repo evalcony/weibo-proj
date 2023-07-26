@@ -3,9 +3,18 @@ import argparse
 import utils
 
 
-def update(section, option, value):
-    config = utils.read_config('config.ini')
+def update(update_param):
+    # 解析参数
+    key_end_pos = update_param.find('=')
+    arg_left = update_param[:key_end_pos]
+    arg_right = update_param[key_end_pos+1:]
+    key_arr = arg_left.split('.')
 
+    section = key_arr[0]
+    option = key_arr[1]
+    value = arg_right
+
+    config = utils.read_config('config.ini')
     config.set(section, option, value)
 
     # 对 cookie 的情况特殊处理
@@ -27,18 +36,15 @@ def show():
         print('')
 
 def work(args):
-    if args.u:
-        update(args.section, args.option, args.value)
+    if args.u != '':
+        update(args.u)
     elif args.show:
         show()
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-section', type=str, default='', help='命名空间')
-    parser.add_argument('-option', type=str, default='', help='key')
-    parser.add_argument('-value', type=str, default='', help='value')
-    parser.add_argument('-u', action='store_true', help='update config')
+    parser.add_argument('-u', type=str, default='', help='update config的参数。遵循section.option.value 的写法')
     parser.add_argument('-show', action='store_true', help='print config')
     args = parser.parse_args()
 
