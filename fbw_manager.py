@@ -28,6 +28,17 @@ def find(word):
     else:
         return False
 
+def compare(sentence):
+    flg = False
+    words = read_file('set')
+    for i in range(len(sentence)):
+        if sentence[i] in words:
+            flg = True
+            print('命中:', sentence[i])
+    if not flg:
+        print('未命中')
+
+
 def read_file(type):
     if type == 'set':
         words = set()
@@ -68,12 +79,15 @@ def manager(args):
     elif args.l:
         s = read_file('set')
         print(s)
+    elif args.c:
+        compare(args.c)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', type=str, default='', help='增加words')
     parser.add_argument('-d', type=str, default='', help='删除words')
     parser.add_argument('-f', type=str, default='', help='搜索words')
+    parser.add_argument('-c', type=str, default='', help='判断输入内容是否命中屏蔽词')
     parser.add_argument('-l', action='store_true', help='列出所有 forbidden words')
     args = parser.parse_args()
 
