@@ -210,6 +210,9 @@ def clean(args):
             file_below = dir[dir.find('..')+3:]
             dir = os.path.dirname(os.path.abspath(__file__)) + '/export/weibo/group/' + file_below
         cleaner.traverse_directory(dir)
+    elif args.a:
+        dir = os.path.dirname(os.path.abspath(__file__)) + '/export/weibo/group/'
+        cleaner.traverse_directory(dir)
     else:
         file_path = os.path.dirname(os.path.abspath(__file__)) + '/export/weibo/group/'
         now = datetime.now()
@@ -224,6 +227,7 @@ def test():
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', type=str, default='', help='clean 指定绝对路径的下的数据。也可以简化路径写法，以 ../ 开头，如 -d ../2023-07-16')
+    parser.add_argument('-a', action='store_true', help='对全部文件进行处理')
     parser.add_argument('-t', action='store_true', help='执行test')
     args = parser.parse_args()
 
