@@ -45,3 +45,9 @@ python3 main.py
 0 * * * * /opt/homebrew/bin/python3 /Users/evalcony/coding/py-proj/weibo-proj/main.py >> /Users/evalcony/coding/py-proj/weibo-proj/logs/file.log 2>&1; /opt/homebrew/bin/python3 /Users/evalcony/coding/py-proj/weibo-proj/data_cleaner.py >> /Users/evalcony/coding/py-proj/weibo-proj/logs/file-t.log 2>&1
 ```
 在 main.py 执行过后，紧接着执行 data_cleaner.py。main.py 的日志输出到 logs/file.log 中；data_cleaner.py 的日志输出到 logs/file-t.log 中。
+
+### 生成项目目录结构
+
+```
+tree -I 'export|__pycache__|test|test_export|logs' > proj-structure.txt
+```
