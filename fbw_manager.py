@@ -31,10 +31,11 @@ def find(word):
 def compare(sentence):
     flg = False
     words = read_file('set')
-    for i in range(len(sentence)):
-        if sentence[i] in words:
+    for word in words:
+        if sentence.find(word) != -1:
             flg = True
-            print('命中:', sentence[i])
+            print('命中:', word)
+            break
     if not flg:
         print('未命中')
 
