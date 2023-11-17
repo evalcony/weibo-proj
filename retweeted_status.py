@@ -11,4 +11,6 @@ class RetweetedStatus:
             self.user = User(u['id'], u['screen_name'])
         else:
             self.user = User(0, '')
-        self.text = total_text_filler.totalize_text(self.text)
+        self.is_long_text = rs_json['isLongText']
+        if self.is_long_text:
+            self.text = total_text_filler.totalize_text(self.id, self.text)

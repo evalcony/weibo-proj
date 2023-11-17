@@ -15,6 +15,29 @@ def write_config(config, name):
     config_path = file_path(name)
     with open(config_path, 'w') as configfile:
         config.write(configfile)
+def read_file(filename):
+    lines = []
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+    if not os.path.exists(root_dir+filename):
+        return []
+    with open(root_dir+filename, 'r') as file:
+        for line in file:
+            lines.append(line.replace("\n",""))
+    return lines
+
+def write_file(finename, lines):
+    print('写入文件:', finename)
+    root_dir = os.path.dirname(os.path.abspath(__file__))
+    path = root_dir
+    # 防止路径不存在
+    if not os.path.exists(path):
+        os.makedirs(path)
+    dir_file_path = path + '/' + finename
+    if not os.path.exists(dir_file_path):
+        open(dir_file_path, 'w').close()
+    with open(dir_file_path, 'w') as f:
+        for m in lines:
+            f.write(m+'\n')
 
 def file_path(name):
     # 获取当前文件所在的根路径

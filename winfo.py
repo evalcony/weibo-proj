@@ -3,15 +3,17 @@ import total_text_filler
 import utils
 
 class Winfo:
-    def __init__(self, created_at, id, text, user, retweeted_status=None):
+    def __init__(self, created_at, id, text, user, retweeted_status=None, is_long_text=False):
         self.created_at = created_at
         self.id = id
         self.text = text
         self.user = user
         self.retweeted_status = retweeted_status
         self.has_retweeted = self.retweeted_status != None
+        self.is_long_text = is_long_text
 
-        self.text = total_text_filler.totalize_text(self.text)
+        if is_long_text:
+            self.text = total_text_filler.totalize_text(self.id, self.text)
 
     def __str__(self):
         return "Winfo: created_at:{} id:{} text:{} user.id:{} user.screen_name:{} retweeted_status:{}".format(

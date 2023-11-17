@@ -1,8 +1,5 @@
 
 import requests
-from pyquery import PyQuery as pq
-from urllib.parse import urlencode  # 导入urlencode函数，用于构建URL参数
-
 import utils
 import time
 from groupby_weibo import GroupByWeibo
@@ -78,6 +75,9 @@ class Weibo:
             continuable = self.is_continue(page)
             if not continuable:
                 break
+
+            # todo
+            # break
 
             sleep_time = utils.random_num(1, 30)
             print(f'wait {sleep_time}s......')
@@ -164,55 +164,34 @@ class Weibo:
         created_at = stat['created_at']
         id = stat['id']
         text = stat['text']
-        long_text = stat['isLongText']
+        is_long_text = stat['isLongText']
         u = stat['user']
         user = User(u['id'], u['screen_name'])
         retweeted_status = None
+        # 转发
         if 'retweeted_status' in stat:
             rs_json = stat['retweeted_status']
             retweeted_status = RetweetedStatus(rs_json)
-        if long_text:
-            text = self.get_long_text(id)
-            if text  == '':
-                text = stat['text']
-
-        winfo = Winfo(created_at, id, text, user, retweeted_status)
+        winfo = Winfo(created_at, id, text, user, retweeted_status, is_long_text)
         print(f'winfo:{winfo.created_at} {winfo.id} {winfo.user.id} {winfo.user.screen_name}')
         # print(winfo.__str__())
         return winfo
 
-    # 获取长微博
-    def get_long_text(self, lid):
-        headers_longtext = {
-            'Host': 'm.weibo.cn',
-            'Referer': 'https://m.weibo.cn/status/' + str(lid),
-            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36'
-        }
-        params = {
-            'id': lid
-        }
-        url = 'https://m.weibo.cn/statuses/extend?' + urlencode(params)
-
-        response = requests.get(url, headers=headers_longtext)  # 发送HTTP GET请求
-        if response.status_code == 200:  # 如果响应状态码为200（成功）
-            jsondata = response.json()  # 解析JSON响应数据
-            tmp = jsondata.get('data')  # 获取长文本数据
-            return pq(tmp.get("longTextContent")).text() # 解析长文本内容
-        else:
-            return ''
-
     def processor_work(self):
         page_list = self.get_page_list()
-        for page in page_list:
-            for winfo in page.winfo_list:
-                print(winfo.as_weibo())
+        # todo
+        # for page in page_list:
+        #     for winfo in page.winfo_list:
+        #         print(winfo.as_weibo())
         if len(page_list) == 0:
             print('结束')
             return
 
+        # todo
+
         for p in self.processor_list:
             p.work(page_list)
-        
+
         # update config
         last_id = page_list[0].winfo_list[0].id
         last_created_at = page_list[0].winfo_list[0].created_at
