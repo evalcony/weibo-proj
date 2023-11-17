@@ -33,7 +33,8 @@ def get_long_text(id):
 
     response = requests.get(url, headers=headers_longtext)  # 发送HTTP GET请求
     if response.status_code == 200:  # 如果响应状态码为200（成功）
-        if response.text.find('微博不存在或暂无查看权限') != -1 or response.text.find('由于博主设置，目前内容暂不可见。') != -1:
+        rtext = response.text
+        if rtext.find('微博不存在或暂无查看权限') != -1 or rtext.find('由于博主设置，目前内容暂不可见。') != -1 or rtext.find('暂无查看权限') != -1:
             print(str(id) + ' 微博不存在或暂无查看权限')
             return ''
         else:
