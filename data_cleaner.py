@@ -207,7 +207,7 @@ def clean(args):
         # 自动填充路径
         dir = args.d
         if dir.find('../') != -1:
-            file_below = dir[dir.find('..')+3:]
+            file_below = dir[dir.find('../')+3:]
             dir = os.path.dirname(os.path.abspath(__file__)) + '/export/weibo/group/' + file_below
         cleaner.traverse_directory(dir)
     elif args.a:

@@ -25,19 +25,34 @@ def read_file(filename):
             lines.append(line.replace("\n",""))
     return lines
 
-def write_file(finename, lines):
-    print('写入文件:', finename)
+def write_file(filename, lines):
+    print('写入文件:', filename)
     root_dir = os.path.dirname(os.path.abspath(__file__))
     path = root_dir
     # 防止路径不存在
     if not os.path.exists(path):
         os.makedirs(path)
-    dir_file_path = path + '/' + finename
+    dir_file_path = path + '/' + filename
     if not os.path.exists(dir_file_path):
         open(dir_file_path, 'w').close()
     with open(dir_file_path, 'w') as f:
         for m in lines:
             f.write(m+'\n')
+
+def read_dirpath_file(filename):
+    lines = []
+    if not os.path.exists(filename):
+        return []
+    with open(filename, 'r') as file:
+        for line in file:
+            lines.append(line.replace("\n", ""))
+    return lines
+
+def write_dirpath_file(filename, lines):
+    print('写入文件:', filename)
+    with open(filename, 'w') as f:
+        for m in lines:
+            f.write(m + '\n')
 
 def file_path(name):
     # 获取当前文件所在的根路径

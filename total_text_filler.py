@@ -8,7 +8,7 @@ def totalize_text(id, text):
     # <a href="/status/4884565010943284">全文</a>
     new_text = get_long_text(id)
     if new_text == '':
-        new_text = text.replace('/status/', base_url + 'status/')
+        new_text = text.replace('<a href="/status/', '<a href="' + base_url + 'status/')
     return new_text
 
 
@@ -26,6 +26,11 @@ def get_long_text(id):
 
     response = requests.get(url, headers=headers_longtext)  # 发送HTTP GET请求
     if response.status_code == 200:  # 如果响应状态码为200（成功）
+        if response.text.find('微博不存在或暂无查看权限') != -1 or response.text.find('由于博主设置，目前内容暂不可见。') != -1:
+            print(str(id) + ' 微博不存在或暂无查看权限')
+            return ''
+        else:
+            print(str(id) + ' 长微博解析完成')
         jsondata = response.json()  # 解析JSON响应数据
         tmp = jsondata.get('data')  # 获取长文本数据
         return pq(tmp.get("longTextContent")).text() # 解析长文本内容
