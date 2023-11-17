@@ -2,6 +2,12 @@ from pyquery import PyQuery as pq
 import requests
 from urllib.parse import urlencode  # 导入urlencode函数，用于构建URL参数
 
+import utils
+
+config = utils.read_config('config.ini')
+cookie = config['WEIBO']['cookie']
+token = config['WEIBO']['token']
+
 def totalize_text(id, text):
     base_url = 'https://m.weibo.cn/'
 
@@ -17,7 +23,8 @@ def get_long_text(id):
     headers_longtext = {
         'Host': 'm.weibo.cn',
         'Referer': 'https://m.weibo.cn/status/' + str(id),
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36'
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',
+        'Cookie': cookie
     }
     params = {
         'id': id
