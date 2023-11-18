@@ -1,11 +1,13 @@
 
 import argparse
 import os
+import time
+
 import total_text_filler
 import utils
 
 # DEFAULT_WEIBO_EXPORT_PATH = '/export/weibo/group/'
-DEFAULT_WEIBO_EXPORT_PATH = '/test_export/'
+DEFAULT_WEIBO_EXPORT_PATH = '/test_export/' # 文件的路径前缀
 
 # 处理历史长微博数据
 def history_longtext(args):
@@ -32,6 +34,11 @@ def traverse_directory(directory):
                 file_path = os.path.join(root, file)
                 if (file.find('.html') != -1):
                     processor(file_path)
+
+                    # 睡眠
+                    sleep_time = utils.random_num(1, 15)
+                    print(f'wait {sleep_time}s......')
+                    time.sleep(sleep_time)
 
 def processor(filename):
     lines = utils.read_dirpath_file(filename) # 读取绝对路径
@@ -80,7 +87,7 @@ def test_case():
     # get_lid_text('<p><span style="color:red;">新京报书评周刊</span> 2023-04-01 15:30:07 1047467705</p><p>【《血色要塞》：一场从未真正结束的围城之战】令人唏嘘的是，“一战”结束后，被权力之手轻率放出的恶魔，仍在帝国的废墟之上游荡，无情地操弄、践踏着生命。“最可怕的是，帝国解体了，但暴力仍然在持续、变异并进一步激化。”普热梅希尔的悲剧不会真正落幕，因为，文明永远无法承受恶魔的试炼。  ...<a href="https://m.weibo.cn/status/4885738137060851">全文</a></p></br>')
     # 暂无查看权限
     tup = get_lid_text(
-        '<p><span style="color:red;">王磬</span> 2023-03-31 23:08:53 1747817202</p><p>十年之后，重访香港重庆大厦，采访了人类学家麦高登（Gordon Mathews）。与十年前相比，大厦的模样已有很大不同。彼时，重庆大厦是「低端全球化」的中心，混乱且繁荣。无数的淘金者汇集到这里，把中国生产的低档商品，经由重庆大厦，销往世界各地，特别是第三世界。麦高登将此过程写成《香港重庆大厦： ...<a href="https://m.weibo.cn/status/4885491201083923">全文</a></p></br>')
+        '<p><span style="color:red;">冰曦微语</span><a href="https://m.weibo.cn/status/4948853797686875">(查看原文)</a> 2023-09-22 19:29:13 1105989411</p><p>【林泽杰：唐节愍太子平反案与史官的认知变迁】是否应该为节愍太子平反，史家争论不休。唐睿宗时期，韦凑上《论谥节愍太子疏》，反对赠予李重俊“节愍”谥号，公案肇起。有唐一代，基本上对节愍太子及其谥号保持“接纳”态势。到两宋时期，受义理史学影响，欧阳修、朱熹等学者进一步肯定节愍太子的行为 ...<a href="https://m.weibo.cn/status/4948853797686875">全文</a></p></br>')
     id = tup[0]
     text = tup[1]
     total_text = total_text_filler.totalize_text(id, text)
