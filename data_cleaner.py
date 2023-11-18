@@ -221,7 +221,7 @@ def clean(args):
 
 def test():
     cleaner = DataCleaner()
-    dir = os.path.dirname(os.path.abspath(__file__)) + '/test_export/2023-07-20'
+    dir = os.path.dirname(os.path.abspath(__file__)) + '/test_export'
     cleaner.traverse_directory(dir)
 
 if __name__ == '__main__':

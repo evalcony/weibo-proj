@@ -76,9 +76,6 @@ class Weibo:
             if not continuable:
                 break
 
-            # todo
-            # break
-
             sleep_time = utils.random_num(1, 30)
             print(f'wait {sleep_time}s......')
             time.sleep(sleep_time)
@@ -179,15 +176,9 @@ class Weibo:
 
     def processor_work(self):
         page_list = self.get_page_list()
-        # todo
-        # for page in page_list:
-        #     for winfo in page.winfo_list:
-        #         print(winfo.as_weibo())
         if len(page_list) == 0:
             print('结束')
             return
-
-        # todo
 
         for p in self.processor_list:
             p.work(page_list)
@@ -214,5 +205,5 @@ class Weibo:
 
 if __name__ == '__main__':
     print('hello')
-    # wb = Weibo()
-    # wb.processor_work()
+    wb = Weibo()
+    wb.processor_work()

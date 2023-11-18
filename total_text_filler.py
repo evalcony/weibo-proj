@@ -15,8 +15,11 @@ def totalize_text(id, text):
     new_text = get_long_text(id)
     if new_text == '':
         new_text = text.replace('<a href="/status/', '<a href="' + base_url + 'status/')
-    return new_text
+    return merge_to_line(new_text)
 
+# 合并成为1行
+def merge_to_line(text):
+    return ''.join(text.split('\n'))
 
 # 获取长微博
 def get_long_text(id):
