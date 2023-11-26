@@ -10,22 +10,26 @@ crontab -e
 ```
 
 ### 各程序入口
+主程序入口
 - main.py 主程序
-- data_cleaner.py 数据清理程序，可单独运行
-- auto_notify.py 网络监控、通知程序，当无法正常访问 api 时，会发送微信消息通知
-- ping_test.py ping 接口的程序，快速检测接口是否能 ping 通
-- fbw_manager.py forbidden_words.txt 的文件操作接口，可以在终端中以命令行的方式操作 forbidden_words.txt 文件数据
-- config_manager.py 操作config.ini的入口
+
+tools
+- data_cleaner.py 数据清理程序，可单独运行。对数据进行清洗、去重、重排。
+- auto_notify.py 网络监控、通知程序，当无法正常访问 api 时，会发送微信消息通知。三方通知接口需要自行申请，配置在 config.ini 中。
+- ping_test.py 用于网络检测的程序。快速检测接口是否能 ping 通
+- fbw_manager.py 对 forbidden_words.txt 的文件的操作程序，可以在终端中以命令行的方式操作 forbidden_words.txt 文件数据
+- config_manager.py 操作config.ini
 
 各程序的执行参数，可以通过 -h 查看。
 
 ### 资源文件
-- config.ini 配置文件
+- config.ini 项目配置文件
 - focus_user.ini weibo的关注列表，并且对进行的输出的分组，在对应分组内添加用户的 id
 - forbidden_words.txt 屏蔽词列表。当 weibo 数据中出现屏蔽词时，予以屏蔽。
 
 ### 其他
-- export 数据输出目录。数据会 export/weibo/group/2023-07-01/... 这个目录下生成 .html 文件。
+- ~~export 数据输出目录。数据会 export/weibo/group/2023-07-01/... 这个目录下生成 .html 文件。~~
+- 数据输出目录外置。在 config.ini 文件中配置，不再放在项目目录中。数据会在 {export}/weibo/group/2023-07-01/... 这个形式的目录下生成 .html 文件。
 - logs 日志文件
 - test 测试
 
@@ -51,6 +55,7 @@ python3 main.py
 ```
 tree -I 'export|__pycache__|test|test_export|logs' > proj-structure.txt
 ```
+
 ### 一些待优化的问题
 - 一些数字的关键字，会在url地址中检测到，导致屏蔽。
 - 需要对一些博主设置白名单，不屏蔽ta的一切内容
