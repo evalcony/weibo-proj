@@ -51,3 +51,7 @@ python3 main.py
 ```
 tree -I 'export|__pycache__|test|test_export|logs' > proj-structure.txt
 ```
+### 一些待优化的问题
+- 一些数字的关键字，会在url地址中检测到，导致屏蔽。
+- 需要对一些博主设置白名单，不屏蔽ta的一切内容
+- 关于内容的智能识别。判断哪些是高价值内容，哪些是低价值内容。
