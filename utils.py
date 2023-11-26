@@ -7,14 +7,15 @@ def read_config(name):
     # 创建 ConfigParser 对象
     config = configparser.RawConfigParser()
     # 读取配置文件
-    config.read(file_path(name))
+    config.read(file_path('config/'+name))
     return config
 
 def write_config(config, name):
     # 将修改后的配置写回文件
-    config_path = file_path(name)
+    config_path = file_path('config/'+name)
     with open(config_path, 'w') as configfile:
         config.write(configfile)
+
 def read_file(filename):
     lines = []
     root_dir = os.path.dirname(os.path.abspath(__file__))
@@ -58,6 +59,7 @@ def file_path(name):
     # 获取当前文件所在的根路径
     root_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(root_dir, name)
+
     return file_path
 
 # 适用于 weibo 的日期数据

@@ -2,14 +2,14 @@
 import requests
 import utils
 import time
-from groupby_weibo import GroupByWeibo
-from retweeted_status import RetweetedStatus
-from timeline_collector import TimelineCollector
-from filter import Filter
-from user import User
-from winfo import Winfo
 import json
-from page import Page
+from data.filter import Filter
+from data.weibo.groupby_weibo import GroupByWeibo
+from data.weibo.page import Page
+from data.weibo.retweeted_status import RetweetedStatus
+from data.weibo.timeline_collector import TimelineCollector
+from data.weibo.user import User
+from data.weibo.winfo import Winfo
 
 
 class Weibo:
@@ -176,6 +176,7 @@ class Weibo:
 
     def processor_work(self):
         page_list = self.get_page_list()
+
         if len(page_list) == 0:
             print('结束')
             return

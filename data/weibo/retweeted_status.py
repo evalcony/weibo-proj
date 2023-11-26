@@ -1,5 +1,5 @@
-import total_text_filler
-from user import User
+from data.weibo import total_text_filler
+from data.weibo.user import User
 
 class RetweetedStatus:
     def __init__(self, rs_json):

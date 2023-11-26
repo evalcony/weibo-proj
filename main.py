@@ -1,7 +1,6 @@
-import auto_notify
-from mastodon import Mastodon
-from weibo import Weibo
-import ping_test
+from tools import auto_notify, ping_test
+from data.mtd.mastodon import Mastodon
+from data.weibo.weibo import Weibo
 
 
 def task():

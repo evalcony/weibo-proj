@@ -1,9 +1,21 @@
 import os
 import argparse
+import sys
+
+# 获取当前脚本所在目录的绝对路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# 将项目的根目录添加到 Python 模块搜索路径中
+proj_root = os.path.abspath(os.path.join(current_dir, ".."))
+sys.path.append(proj_root)
 import utils
 from datetime import datetime
-from filter import Filter
+from data.filter import Filter
 from weibo_seperator import WeiboSeperator
+
+ROOT_DIR = utils.read_config('config.ini')['DIR']
+export_root_path = ROOT_DIR['export_root_path']
+export_root_path_test = ROOT_DIR['export_root_path_test']
 
 class DataCleaner:
     def __init__(self):
@@ -172,9 +184,6 @@ class DataCleaner:
 
         return hv_list
 
-    # TODO: 同一个作者的几条相似微博，应该取最近的那一条。涉及文本相似度分析。
-    # 还有同一博主对同一篇微博分多次转发的
-
     def is_in_user_set(self, e):
         return e in self.user_set
 
@@ -200,6 +209,7 @@ class DataCleaner:
         print('写文件完成:'+file_root+'/'+file)
 
 def clean(args):
+
     cleaner = DataCleaner()
     if args.t:
         test()
@@ -208,20 +218,21 @@ def clean(args):
         dir = args.d
         if dir.find('../') != -1:
             file_below = dir[dir.find('../')+3:]
-            dir = os.path.dirname(os.path.abspath(__file__)) + '/export/weibo/group/' + file_below
+            dir = export_root_path + 'weibo/group/' + file_below
         cleaner.traverse_directory(dir)
     elif args.a:
-        dir = os.path.dirname(os.path.abspath(__file__)) + '/export/weibo/group/'
+        dir = export_root_path + 'weibo/group/'
         cleaner.traverse_directory(dir)
     else:
-        file_path = os.path.dirname(os.path.abspath(__file__)) + '/export/weibo/group/'
+        file_path = export_root_path + 'weibo/group/'
         now = datetime.now()
         time_str = now.strftime('%Y-%m-%d')
         cleaner.traverse_directory(file_path + str(time_str))
 
 def test():
     cleaner = DataCleaner()
-    dir = os.path.dirname(os.path.abspath(__file__)) + '/test_export'
+
+    dir = export_root_path_test
     cleaner.traverse_directory(dir)
 
 if __name__ == '__main__':

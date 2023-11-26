@@ -1,9 +1,17 @@
 import argparse
 import requests
+import os
+import sys
 
+# 获取当前脚本所在目录的绝对路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# 将项目的根目录添加到 Python 模块搜索路径中
+proj_root = os.path.abspath(os.path.join(current_dir, ".."))
+sys.path.append(proj_root)
 import utils
-from mastodon import Mastodon
-from weibo import Weibo
+from data.mtd.mastodon import Mastodon
+from data.weibo.weibo import Weibo
 
 
 def get_proxy():
@@ -21,7 +29,7 @@ def request_for_google():
     return response.content
 
 def request_for_v2ex():
-    response = requests.get("https://www.v2ex.com", verify = False, timeout=5, cert=None, proxies=get_proxy())
+    response = requests.get("https://www.v2ex.com", verify=False, timeout=5, cert=None, proxies=get_proxy())
     return response.content
 
 def request_for_baidu():

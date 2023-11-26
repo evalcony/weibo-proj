@@ -1,5 +1,5 @@
 # 指代单个微博
-import total_text_filler
+from data.weibo import total_text_filler
 import utils
 
 class Winfo:

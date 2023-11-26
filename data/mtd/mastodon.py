@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 import requests
 import utils
-from mtd_Info import MtdInfo
+from data.mtd.mtd_Info import MtdInfo
 
 
 class Mastodon:
@@ -18,6 +18,7 @@ class Mastodon:
     def read_from_config(self):
         config = utils.read_config('config.ini')
 
+        self.DIR = config['DIR']
         self.created_at = config['MASTODON']['created_at']
         self.cookie = config['MASTODON']['cookie']
         self.timeline_url = config['MASTODON']['timeline_url']
@@ -46,7 +47,6 @@ class Mastodon:
         group_set = {}
         # Todo: 我的mastodon比较特殊，所以很个人的代码，这里就删掉了
         # 请使用者根据个人情况，自行编写相关代码
-
         return group_set
 
     # 每次结束后，更新配置文件
@@ -115,8 +115,9 @@ class Mastodon:
         print('mastodon分组写文件结束')
 
     def _save_infront(self, prefix, file_name, mtd_list):
-        root_dir = os.path.dirname(os.path.abspath(__file__))
-        directory = root_dir + '/export/mastodon/group/' + prefix
+        export_root_path = self.DIR['export_root_path']
+        directory = export_root_path + '/mastodon/group/' + prefix
+
         # 防止路径不存在
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -201,6 +202,31 @@ class Mastodon:
         last_created_at = page_list[0][0].created_at
         self.update_config(last_id, last_created_at)
 
-if __name__ == '__main__':
+def test_build_mtd_info():
+    item = dict()
+    item["created_at"] = '2023-11-26T05:02:31.000Z'
+    item["id"] = '1'
+    item["url"] = 'url'
+    item["content"] = 'content'
+
+    account = dict()
+    account['id'] = 'a_id'
+    account['username'] = 'a_uname'
+    account['display_name'] = 'a_disp_name'
+    item['account'] = account
+
+    item['reblog'] = None
+
+    return MtdInfo(item)
+
+def test():
+    mtd_list = []
+    mtd_list.append(test_build_mtd_info())
+
     mastodon = Mastodon()
-    mastodon.processor_work()
+    mastodon._save_infront('2023-04', '老周.html', mtd_list)
+
+if __name__ == '__main__':
+    # mastodon = Mastodon()
+    # mastodon.processor_work()
+    test()

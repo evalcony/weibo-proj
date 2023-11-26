@@ -1,4 +1,4 @@
-import os
+import os, sys
 from datetime import datetime
 
 import utils
@@ -11,6 +11,7 @@ class GroupByWeibo:
         # user_group['group_name'][id_str_list]
         self.user_group = self.read_config()
         self.user_group_set = self.to_set()
+        self.DIR = utils.read_config('config.ini')['DIR']
 
     def to_set(self):
         group_set = {}
@@ -73,8 +74,8 @@ class GroupByWeibo:
         print('分组写文件结束')
 
     def _save_infront(self, prefix, file_name, winfo_list):
-        root_dir = os.path.dirname(os.path.abspath(__file__))
-        directory = root_dir + '/export/weibo/group/' + prefix
+        export_root_path = self.DIR['export_root_path']
+        directory = export_root_path + '/weibo/group/' + prefix
         # 防止路径不存在
         if not os.path.exists(directory):
             os.makedirs(directory)
@@ -94,12 +95,20 @@ class GroupByWeibo:
 
 
 def test_build_winfo(id, name):
-    from winfo import Winfo
-    from user import User
-    winfo = Winfo('', 1, '', User(id, name))
+    from data.weibo.winfo import Winfo
+    from data.weibo.user import User
+    winfo = Winfo('Sun Nov 26 13:00:01 +0800 2023', 1, '测试内容', User(id, name))
     return winfo
 
 
-if __name__ == '__main__':
+def test():
     winfo_list = []
-    
+
+    winfo = test_build_winfo(1, 'aaa')
+    winfo_list.append(winfo)
+
+    gbw = GroupByWeibo()
+    gbw._save_infront('2023-03-31', 'group_article.html', winfo_list)
+
+if __name__ == '__main__':
+    test()

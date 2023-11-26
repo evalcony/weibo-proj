@@ -1,4 +1,4 @@
-from weibo_seperator import WeiboSeperator
+from tools.weibo_seperator import WeiboSeperator
 
 
 class TestWeiboSeperator:

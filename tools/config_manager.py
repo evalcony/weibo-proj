@@ -1,5 +1,13 @@
 import argparse
+import os
+import sys
 
+# 获取当前脚本所在目录的绝对路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# 将项目的根目录添加到 Python 模块搜索路径中
+proj_root = os.path.abspath(os.path.join(current_dir, ".."))
+sys.path.append(proj_root)
 import utils
 
 

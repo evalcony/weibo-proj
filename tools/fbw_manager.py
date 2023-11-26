@@ -1,9 +1,18 @@
 import argparse
+import os
+import sys
+
+# 获取当前脚本所在目录的绝对路径
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# 将项目的根目录添加到 Python 模块搜索路径中
+proj_root = os.path.abspath(os.path.join(current_dir, ".."))
+sys.path.append(proj_root)
 import utils
 
 # 处理 forbidden_words.txt，可以追加、删除
 
-base_file = 'forbidden_words.txt'
+base_file = 'config/forbidden_words.txt'
 
 def add(word):
     file_path = utils.file_path(base_file)

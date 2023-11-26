@@ -3,11 +3,11 @@ import argparse
 import os
 import time
 
-import total_text_filler
+from data.weibo import total_text_filler
 import utils
 
-# DEFAULT_WEIBO_EXPORT_PATH = '/export/weibo/group/'
-DEFAULT_WEIBO_EXPORT_PATH = '/test_export/' # 文件的路径前缀
+# DEFAULT_WEIBO_EXPORT_PATH = utils.read_config('config.ini')['DIR']['export_root_path']+'weibo/group/'
+DEFAULT_WEIBO_EXPORT_PATH = utils.read_config('config.ini')['DIR']['export_root_path_test'] # 文件的路径前缀
 
 # 处理历史长微博数据
 def history_longtext(args):
@@ -16,10 +16,10 @@ def history_longtext(args):
         dir = args.d
         if dir.find('../') != -1:
             file_below = dir[dir.find('../') + 3:]
-            dir = os.path.dirname(os.path.abspath(__file__)) + DEFAULT_WEIBO_EXPORT_PATH + file_below
+            dir = DEFAULT_WEIBO_EXPORT_PATH + file_below
         traverse_directory(dir)
     elif args.a:
-        dir = os.path.dirname(os.path.abspath(__file__)) + DEFAULT_WEIBO_EXPORT_PATH
+        dir = DEFAULT_WEIBO_EXPORT_PATH
         traverse_directory(dir)
     elif args.t:
         test_case()

@@ -1,10 +1,20 @@
 import requests
 from datetime import datetime
-import weibo
-from mastodon import Mastodon
 
+import utils
+from data.weibo import weibo
+from data.mtd.mastodon import Mastodon
+
+config = utils.read_config('config.ini')
+AUTO_NOTIFY = config['AUTO_NOTIFY']
 
 def work():
+
+    # 自动通知开关
+    notify_switch = AUTO_NOTIFY['notify_switch']
+    if notify_switch != 'y':
+        return
+
     notify_msg = ''
     expired = False
     try:
@@ -21,15 +31,15 @@ def work():
             notify_msg = notify_msg + ('mastodon过期\n')
             expired = True
     except Exception:
-        notify_msg = notify_msg + ('【weibo-proj】网络请异常')
+        notify_msg = notify_msg + ('【weibo-proj】网络请求异常')
 
     notify_msg = notify_msg + str(datetime.now()) + '\n'
     print(notify_msg)
 
     # send notify
     if expired:
-        # Todo 这里自行填入你的通知接口地址
-        notify_url = 'https://push.showdoc.com.cn/server/api/push/5f9501a1d2504471d7314b96933019c91134058281'
+        # 自动通知接口地址
+        notify_url = AUTO_NOTIFY['url']
         params = {
             'title': '【weibo-proj】过期信息:',
             'content': notify_msg,

@@ -1,9 +1,13 @@
 import argparse
 import os
+import sys
 
+sys.path.append("..")
 import utils
 
-DEFAULT_WEIBO_EXPORT_PATH = '/test_export/' # 文件的路径前缀
+
+# DEFAULT_WEIBO_EXPORT_PATH = utils.read_config('config.ini')['DIR']['export_root_path'] # 文件的路径前缀
+DEFAULT_WEIBO_EXPORT_PATH = utils.read_config('config.ini')['DIR']['export_root_path_test'] # 测试路径-文件的路径前缀
 
 def core(args):
     if args.d:
