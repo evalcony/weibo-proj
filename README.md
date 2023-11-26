@@ -42,7 +42,7 @@ python3 main.py
 由于main主程序对数据的处理不够精细，存在数据重复的情况。所以，推荐在 main.py 执行过后，紧接着执行 data_cleaner.py,清理数据。
 例如，我在 crontab 中的配置如下
 ```commandline
-0 * * * * /opt/homebrew/bin/python3 /Users/evalcony/coding/py-proj/weibo-proj/main.py >> /Users/evalcony/coding/py-proj/weibo-proj/logs/file.log 2>&1; /opt/homebrew/bin/python3 /Users/evalcony/coding/py-proj/weibo-proj/data_cleaner.py >> /Users/evalcony/coding/py-proj/weibo-proj/logs/file-t.log 2>&1
+0 * * * * /opt/homebrew/bin/python3 /Users/evalcony/coding/py-proj/weibo-proj/main.py >> /Users/evalcony/coding/py-proj/weibo-proj/logs/file.log 2>&1; /opt/homebrew/bin/python3 /Users/evalcony/coding/py-proj/weibo-proj/tools/data_cleaner.py >> /Users/evalcony/coding/py-proj/weibo-proj/logs/file-t.log 2>&1
 ```
 在 main.py 执行过后，紧接着执行 data_cleaner.py。main.py 的日志输出到 logs/file.log 中；data_cleaner.py 的日志输出到 logs/file-t.log 中。
 
