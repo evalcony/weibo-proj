@@ -58,7 +58,7 @@ class Mastodon:
         config['MASTODON']['created_at'] = created_at
 
         # 将修改后的配置写回文件
-        config_path = utils.file_path('config.ini')
+        config_path = utils.file_path('config/config.ini')
         with open(config_path, 'w') as f:
             config.write(f)
 
