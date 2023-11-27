@@ -19,7 +19,8 @@ def totalize_text(id, text):
 
 # 合并成为1行
 def merge_to_line(text):
-    return ''.join(text.split('\n'))
+    res = text.replace('\n', '<br />')
+    return res
 
 # 获取长微博
 def get_long_text(id):
@@ -50,3 +51,4 @@ def get_long_text(id):
         return pq(tmp.get("longTextContent")).text() # 解析长文本内容
     else:
         return ''
+

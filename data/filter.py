@@ -4,6 +4,10 @@ import sys
 sys.path.append('..')
 import utils
 
+
+# 匹配所有 HTML 标签的正则表达式
+pattern = re.compile(r"<[^>]+>", re.DOTALL)
+
 class Filter:
     def __init__(self):
         self.forbidden_words = self.read_forbidden_words_config()
@@ -31,14 +35,12 @@ class Filter:
 
     # 纯内容长度
     def pure_text(self, text):
+        if text == None:
+            return ''
         """去除文本中的 HTML 标签"""
-        # 匹配所有 HTML 标签的正则表达式
-        pattern = re.compile(r"<[^>]+>", re.DOTALL)
         # 将文本中的 HTML 标签替换为空字符串
         return re.sub(pattern, "", text)
 
-    # todo
-    # user_id 白名单列表
 
 if __name__ == '__main__':
     filter = Filter()
