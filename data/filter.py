@@ -1,3 +1,7 @@
+import re
+import sys
+
+sys.path.append('..')
 import utils
 
 class Filter:
@@ -17,13 +21,21 @@ class Filter:
 
         # 如果微博长度超过300，则对屏蔽词放行
         # 300 是一个经验值，可以调整
-        if len(text) > 300:
+        if len(self.pure_text(text)) > 300:
             return ''
 
         for word in self.forbidden_words:
             if word in text:
                 return word
         return ''
+
+    # 纯内容长度
+    def pure_text(self, text):
+        """去除文本中的 HTML 标签"""
+        # 匹配所有 HTML 标签的正则表达式
+        pattern = re.compile(r"<[^>]+>", re.DOTALL)
+        # 将文本中的 HTML 标签替换为空字符串
+        return re.sub(pattern, "", text)
 
     # todo
     # user_id 白名单列表
