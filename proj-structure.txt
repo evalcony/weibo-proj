@@ -4,7 +4,6 @@
 │   ├── config.ini
 │   ├── focus_user.ini
 │   └── forbidden_words.txt
-├── config.ini
 ├── data
 │   ├── filter.py
 │   ├── mtd
@@ -34,4 +33,4 @@
 ├── utils.py
 └── 保存数据到csv.txt
 
-6 directories, 29 files
+6 directories, 28 files
