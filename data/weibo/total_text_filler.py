@@ -48,7 +48,8 @@ def get_long_text(id):
             print(str(id) + ' 长微博解析完成')
         jsondata = response.json()  # 解析JSON响应数据
         tmp = jsondata.get('data')  # 获取长文本数据
-        return pq(tmp.get("longTextContent")).text() # 解析长文本内容
+        # return pq(tmp.get("longTextContent")).text() # 解析长文本内容
+        return tmp.get("longTextContent") # 解析长文本内容
     else:
         return ''
 
