@@ -10,9 +10,10 @@ pattern = re.compile(r"<[^>]+>", re.DOTALL)
 
 class Filter:
     def __init__(self):
-        self.forbidden_words = self.read_forbidden_words_config()
+        self.forbidden_words = self._read_forbidden_words_config()
+        self.apass_ulist = self._read_always_pass_user_config()
 
-    def read_forbidden_words_config(self):
+    def _read_forbidden_words_config(self):
         words = []
         root_dir = utils.file_path('config/forbidden_words.txt')
         print(root_dir)
@@ -20,6 +21,19 @@ class Filter:
             for word in file:
                 words.append(word.replace("\n",""))
         return words
+
+    def _read_always_pass_user_config(self):
+        config = utils.read_config('always_pass_user.ini')
+        user_list_str = config['PASS_USER']['user']
+        return user_list_str.replace(' ', "").split(',')
+
+    def always_pass(self, user):
+        uid = user.id
+        for pid in self.apass_ulist:
+            if str(uid) == pid:
+                print(str(uid) + 'always pass')
+                return True
+        return False
 
     def has_forbidden_word(self, text):
 

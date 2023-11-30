@@ -139,6 +139,12 @@ class Weibo:
         for stat in statuses:
             winfo = self.build_winfo(stat)
 
+            # 总是允许
+            passable = self.filter.always_pass(winfo.user)
+            if passable:
+                winfo_list.append(winfo)
+                continue
+
             # 过滤
             w1 = self.filter.has_forbidden_word(winfo.text)
             if w1 != '':
