@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import time
 from datetime import datetime
 import requests
@@ -117,6 +118,7 @@ class Mastodon:
     def _save_infront(self, prefix, file_name, mtd_list):
         export_root_path = self.DIR['export_root_path']
         directory = export_root_path + '/mastodon/group/' + prefix
+        img_export_path = directory + '/medias'
 
         # 防止路径不存在
         if not os.path.exists(directory):
@@ -130,9 +132,29 @@ class Mastodon:
             original_content = f.read()
             f.seek(0)
             for m in mtd_list:
+                self._save_medias(m, img_export_path)
                 str = m.as_mastodon()
                 f.write(str)
             f.write(original_content)
+
+    # 保存多媒体资源（仅限图片）
+    def _save_medias(self, mtd, img_export_path):
+        media_attachments = mtd.media_attachments
+        if media_attachments == []:
+            return
+
+        # 检查保存路径是否存在
+        if not os.path.exists(img_export_path):
+            os.makedirs(img_export_path)
+
+        # 下载资源文件
+        for url in media_attachments:
+            response = requests.get(url, stream=True)
+            filename = url.split('/')[-1]
+            path = img_export_path+'/'+filename
+            with open(path, "wb") as out_file:
+                shutil.copyfileobj(response.raw, out_file)
+            print('保存成功 ' + path)
 
     # 基于 created_at 来判断是否要继续拉取数据
     def is_continue(self, mtd):
