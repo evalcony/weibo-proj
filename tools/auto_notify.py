@@ -1,4 +1,7 @@
+import sys
+
 import requests
+import os
 from datetime import datetime
 
 import utils
@@ -7,6 +10,7 @@ from data.mtd.mastodon import Mastodon
 
 config = utils.read_config('config.ini')
 AUTO_NOTIFY = config['AUTO_NOTIFY']
+MAC_SYS_NOTIFY = config['mac_sys_notify']
 
 def work():
 
@@ -36,19 +40,26 @@ def work():
     notify_msg = notify_msg + str(datetime.now()) + '\n'
     print(notify_msg)
 
+    params = {
+        'title': '【weibo-proj】过期信息:',
+        'content': notify_msg,
+    }
+
+    if MAC_SYS_NOTIFY == 'y':
+        # macOS系统通知
+        sys_notify(params)
     # send notify
     if expired:
         # 自动通知接口地址
         notify_url = AUTO_NOTIFY['url']
-        params = {
-            'title': '【weibo-proj】过期信息:',
-            'content': notify_msg,
-        }
         response = requests.get(notify_url, params=params)
         print(response.text)
     else:
         print('接口正常，未过期')
     return expired
+
+def sys_notify(params):
+	os.system("""osascript -e 'display notification "{}" with title "{}"'""".format(params['content'], params['title']))
 
 if __name__ == '__main__':
     work()
