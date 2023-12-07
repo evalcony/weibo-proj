@@ -8,15 +8,15 @@ import utils
 from data.weibo import weibo
 from data.mtd.mastodon import Mastodon
 
+# 读取配置
 config = utils.read_config('config.ini')
 AUTO_NOTIFY = config['AUTO_NOTIFY']
-MAC_SYS_NOTIFY = config['mac_sys_notify']
 
 def work():
 
     # 自动通知开关
-    notify_switch = AUTO_NOTIFY['notify_switch']
-    if notify_switch != 'y':
+    NOTIFY_SWITCH = AUTO_NOTIFY['notify_switch']
+    if NOTIFY_SWITCH != 'y':
         return
 
     notify_msg = ''
@@ -45,14 +45,15 @@ def work():
         'content': notify_msg,
     }
 
+    MAC_SYS_NOTIFY = AUTO_NOTIFY['mac_sys_notify']
     if MAC_SYS_NOTIFY == 'y':
         # macOS系统通知
         sys_notify(params)
     # send notify
     if expired:
         # 自动通知接口地址
-        notify_url = AUTO_NOTIFY['url']
-        response = requests.get(notify_url, params=params)
+        NOTIFY_URL = AUTO_NOTIFY['url']
+        response = requests.get(NOTIFY_URL, params=params)
         print(response.text)
     else:
         print('接口正常，未过期')
