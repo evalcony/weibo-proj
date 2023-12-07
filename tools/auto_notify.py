@@ -40,17 +40,18 @@ def work():
     notify_msg = notify_msg + str(datetime.now()) + '\n'
     print(notify_msg)
 
-    params = {
-        'title': '【weibo-proj】过期信息:',
-        'content': notify_msg,
-    }
-
-    MAC_SYS_NOTIFY = AUTO_NOTIFY['mac_sys_notify']
-    if MAC_SYS_NOTIFY == 'y':
-        # macOS系统通知
-        sys_notify(params)
     # send notify
     if expired:
+        params = {
+            'title': '【weibo-proj】过期信息:',
+            'content': notify_msg,
+        }
+
+        # macOS系统通知
+        MAC_SYS_NOTIFY = AUTO_NOTIFY['mac_sys_notify']
+        if MAC_SYS_NOTIFY == 'y':
+            sys_notify(params)
+
         # 自动通知接口地址
         NOTIFY_URL = AUTO_NOTIFY['url']
         response = requests.get(NOTIFY_URL, params=params)
