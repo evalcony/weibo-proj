@@ -12,7 +12,7 @@ def task():
         try:
             t.processor_work()
         except:
-            auto_notify.sys_notify('调用异常','调用异常，请即时处理')
+            auto_notify.sys_notify('调用异常',t.__class__.__name__+'调用异常，请即时处理')
 
 if __name__ == '__main__':
     # 网络环境检测
