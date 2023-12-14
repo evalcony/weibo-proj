@@ -9,7 +9,10 @@ def task():
     task_list.append(Mastodon())
 
     for t in task_list:
-        t.processor_work()
+        try:
+            t.processor_work()
+        except:
+            auto_notify.sys_notify('调用异常','调用异常，请即时处理')
 
 if __name__ == '__main__':
     # 网络环境检测

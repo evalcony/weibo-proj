@@ -48,9 +48,7 @@ def work():
         }
 
         # macOS系统通知
-        MAC_SYS_NOTIFY = AUTO_NOTIFY['mac_sys_notify']
-        if MAC_SYS_NOTIFY == 'y':
-            sys_notify('【weibo-proj】过期信息', '微博过期')
+        sys_notify('【weibo-proj】过期信息', '微博过期')
 
         # 自动通知接口地址
         NOTIFY_URL = AUTO_NOTIFY['url']
@@ -61,7 +59,9 @@ def work():
     return expired
 
 def sys_notify(title, content):
-    os.system("""osascript -e 'display notification "{}" with title "{}"'""".format(content, title))
+    MAC_SYS_NOTIFY = AUTO_NOTIFY['mac_sys_notify']
+    if MAC_SYS_NOTIFY == 'y':
+        os.system("""osascript -e 'display notification "{}" with title "{}"'""".format(content, title))
 
 if __name__ == '__main__':
     work()
