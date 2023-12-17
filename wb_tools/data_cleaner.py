@@ -240,6 +240,7 @@ if __name__ == '__main__':
     parser.add_argument('-d', type=str, default='', help='clean 指定绝对路径的下的数据。也可以简化路径写法，以 ../ 开头，如 -d ../2023-07-16')
     parser.add_argument('-a', action='store_true', help='对全部文件进行处理')
     parser.add_argument('-t', action='store_true', help='执行test')
+    # 如果无参数，则处理当天数据
     args = parser.parse_args()
 
     clean(args)

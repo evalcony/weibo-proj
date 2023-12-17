@@ -1,4 +1,6 @@
-from tools.weibo_seperator import WeiboSeperator
+import sys
+sys.path.append('..')
+from wb_tools.weibo_seperator import WeiboSeperator
 
 
 class TestWeiboSeperator:

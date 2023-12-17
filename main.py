@@ -1,4 +1,4 @@
-from tools import auto_notify, ping_test
+from wb_tools import auto_notify, ping_test
 from data.mtd.mastodon import Mastodon
 from data.weibo.weibo import Weibo
 
