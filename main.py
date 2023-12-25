@@ -1,12 +1,18 @@
 from wb_tools import auto_notify, ping_test
 from data.mtd.mastodon import Mastodon
 from data.weibo.weibo import Weibo
-
+import utils
 
 def task():
+
+    wb_switch = utils.read_config('config.ini')['WEIBO']['switch']
+    mtd_switch = utils.read_config('config.ini')['MASTODON']['switch']
+
     task_list = []
-    task_list.append(Weibo())
-    task_list.append(Mastodon())
+    if wb_switch == 'y':
+        task_list.append(Weibo())
+    if mtd_switch == 'y':
+        task_list.append(Mastodon())
 
     for t in task_list:
         try:
