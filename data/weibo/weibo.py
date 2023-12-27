@@ -137,7 +137,11 @@ class Weibo:
         winfo_list = []
         statuses = data_obj['statuses']
         for stat in statuses:
-            winfo = self.build_winfo(stat)
+            try:
+                winfo = self.build_winfo(stat)
+            except Exception as e:
+                print(repr(e))
+                continue
 
             # 总是允许
             passable = self.filter.always_pass(winfo.user)
