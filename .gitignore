@@ -163,3 +163,4 @@ cython_debug/
 export/
 logs/
 test_export/
+cache/
