@@ -17,6 +17,7 @@ def task():
     for t in task_list:
         try:
             t.processor_work()
+            print('=' * 20)
         except:
             auto_notify.sys_notify('调用异常',t.__class__.__name__+'调用异常，请即时处理')
 

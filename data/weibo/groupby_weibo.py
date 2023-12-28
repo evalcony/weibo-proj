@@ -1,4 +1,4 @@
-import os, sys
+import os
 from datetime import datetime
 
 import utils
@@ -47,13 +47,11 @@ class GroupByWeibo:
     def group(self, page):
         if self.user_group_set == {}:
             return
-        winfo_list = page.winfo_list
-
         gs = self.user_group_set
         for g_name, gs_id_set in gs.items():
             if len(gs_id_set) == 0:
                 continue
-            for winfo in winfo_list:
+            for winfo in page.winfo_list:
                 id = winfo.user.id
                 if str(id) in gs_id_set:
                     if g_name not in self.result_dict:

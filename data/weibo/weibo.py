@@ -95,6 +95,7 @@ class Weibo:
             print(f'wait {sleep_time}s......')
             time.sleep(sleep_time)
 
+        print(f'page_list={len(page_list)} end_point={end_point}')
         return page_list, end_point
 
     # 基于 created_at 来判断是否要继续拉取数据
@@ -205,6 +206,7 @@ class Weibo:
         flg = self.solve_cache()
         # 未成功抵达结束点，所以直接退出，不执行下面流程
         if not flg:
+            print('缓存流程结束时，未成功抵达上一批次结束点')
             return
 
         # cache数据已经写文件后，再处理最新数据
@@ -218,7 +220,6 @@ class Weibo:
         # 如果未完成，则优先将cache直到上一次结束点的数据全部获取
         tuple = self.get_page_list(cache_meta.last_id)
         end_point = tuple[1]
-        print('end_point='+str(end_point))
         # 如果未读到结束点
         if not end_point:
             return False
@@ -227,6 +228,10 @@ class Weibo:
 
         # 读取全量cache_page_list数据。因为上面的page_list是[截断点 -> 结束点]直接的数据
         cache_page_list = wb_local_cache.read_cache()
+
+        if len(cache_page_list) == 0:
+            print('cache_page_list=[]，结束')
+            return False
 
         # 数据处理+更新 config, cache_meta
         self.process_data_and_update_config(cache_page_list)
@@ -238,21 +243,23 @@ class Weibo:
 
     def solve_latest(self):
         # 获取当前最新数据
-        page_list = self.get_page_list()
+        tuple = self.get_page_list()
+        page_list = tuple[0]
+        if len(page_list) == 0 or not tuple[1]:
+            print(f'page_list={len(page_list)} end_point={tuple[1]}，结束')
+            return False
 
         # 数据处理+更新 config, cache_meta
         self.process_data_and_update_config(page_list)
 
-        print('本次批次全部执行完毕')
-
     def process_data_and_update_config(self, page_list):
-        if len(page_list) == 0:
-            print('结束')
-            return
-
         # 数据处理
         for p in self.processor_list:
-            p.work(page_list)
+            try:
+                p.work(page_list)
+            except Exception as e:
+                print(repr(e))
+                return
 
         # 更新 config
         last_id = page_list[0].winfo_list[0].id
@@ -261,6 +268,8 @@ class Weibo:
 
         # 更新cache_meta数据，重置cache_meta
         wb_local_cache.done()
+
+        print('本次批次全部执行完毕')
 
     # 每次结束后，更新配置文件
     def update_config(self, id, created_at):
