@@ -26,7 +26,7 @@ def read_file(filename):
             lines.append(line.replace("\n",""))
     return lines
 
-def write_file(filename, lines):
+def write_file(filename, lines, mode='w'):
     print('写入文件:', filename)
     root_dir = os.path.dirname(os.path.abspath(__file__))
     path = root_dir

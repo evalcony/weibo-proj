@@ -1,5 +1,6 @@
 
 import requests
+import wb_local_cache
 import utils
 import time
 import json
@@ -55,11 +56,15 @@ class Weibo:
         else:
             return TimelineCollector()
     
-    def get_page_list(self):
+    def get_page_list(self, max_id=0):
         page_list = []
-        max_id = 0
+        end_point = False
         while True:
-            text = self.request_for_pages(max_id)
+            try:
+                text = self.request_for_pages(max_id)
+            except Exception as e:
+                print(repr(e))
+                return [], False
 
             # 解析得到分页数据，一个page中包含 statuses，即多条winfo
             page = self.parse_json(text)
@@ -69,18 +74,28 @@ class Weibo:
                 break
             if len(page.winfo_list) == 0:
                 break
+            # 这里更新id，是为了处理 max_id=0的情况
+            max_id = page.winfo_list[0].id
+
+            # 将每个page数据缓存
+            wb_local_cache.write_cache(max_id, page)
+
             page_list.append(page)
             max_id = page.max_id
 
+            # 判断是否到达结束点
             continuable = self.is_continue(page)
             if not continuable:
+                # 只有为True时，是明确的抵达结束点
+                end_point = True
+                print('不需继续执行，退出')
                 break
 
             sleep_time = utils.random_num(1, 30)
             print(f'wait {sleep_time}s......')
             time.sleep(sleep_time)
 
-        return page_list
+        return page_list, end_point
 
     # 基于 created_at 来判断是否要继续拉取数据
     def is_continue(self, page):
@@ -185,19 +200,67 @@ class Weibo:
         return winfo
 
     def processor_work(self):
+
+        # 每次开始，先处理历史未完成的 cache 数据
+        flg = self.solve_cache()
+        # 未成功抵达结束点，所以直接退出，不执行下面流程
+        if not flg:
+            return
+
+        # cache数据已经写文件后，再处理最新数据
+        self.solve_latest()
+
+
+    def solve_cache(self):
+        cache_meta = wb_local_cache.read_cache_meta()
+        if cache_meta.is_finished:
+            return True
+        # 如果未完成，则优先将cache直到上一次结束点的数据全部获取
+        tuple = self.get_page_list(cache_meta.last_id)
+        end_point = tuple[1]
+        print('end_point='+str(end_point))
+        # 如果未读到结束点
+        if not end_point:
+            return False
+
+        print('--------------solve_cache() 结束点 --------------')
+
+        # 读取全量cache_page_list数据。因为上面的page_list是[截断点 -> 结束点]直接的数据
+        cache_page_list = wb_local_cache.read_cache()
+
+        # 数据处理+更新 config, cache_meta
+        self.process_data_and_update_config(cache_page_list)
+
+        # 重新读取配置，更新内存中的相关配置
+        self.read_from_config()
+
+        return True
+
+    def solve_latest(self):
+        # 获取当前最新数据
         page_list = self.get_page_list()
 
+        # 数据处理+更新 config, cache_meta
+        self.process_data_and_update_config(page_list)
+
+        print('本次批次全部执行完毕')
+
+    def process_data_and_update_config(self, page_list):
         if len(page_list) == 0:
             print('结束')
             return
 
+        # 数据处理
         for p in self.processor_list:
             p.work(page_list)
 
-        # update config
+        # 更新 config
         last_id = page_list[0].winfo_list[0].id
         last_created_at = page_list[0].winfo_list[0].created_at
         self.update_config(last_id, last_created_at)
+
+        # 更新cache_meta数据，重置cache_meta
+        wb_local_cache.done()
 
     # 每次结束后，更新配置文件
     def update_config(self, id, created_at):

@@ -15,7 +15,6 @@ def task():
         task_list.append(Mastodon())
 
     for t in task_list:
-        # t.processor_work()
         try:
             t.processor_work()
         except:
