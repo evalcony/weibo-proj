@@ -28,7 +28,7 @@ def done(target_day=''):
     # 重置cache_meta
     cache_meta = CacheMeta()
     cache_meta.is_finished = True
-    write_cache_meta(cache_meta)
+    write_cache_meta(cache_meta, target_day)
 
 # 加载所有cache，并自动合并
 def read_cache(target_day=''):
@@ -51,19 +51,24 @@ def read_cache(target_day=''):
 def read_cache_meta(target_day=''):
     return load_dump(CACHE_META_FILE, target_day=target_day)
 
+def is_empty(target_day=''):
+    cache_meta = read_cache_meta(target_day)
+    print(cache_meta.files)
+    return len(cache_meta.files) == 0
+
 def sort_func(page):
     return page.max_id
 
-def write_cache(maxid, page):
+def write_cache(maxid, page, target_day=''):
     print('-' * 10 + '缓存数据开始')
     try:
         # 持久化page数据-----------
         cur_cache_data_file = _get_cache_data_filename(maxid)
         print(cur_cache_data_file)
-        dump(page, cur_cache_data_file)
+        dump(page, cur_cache_data_file, target_day)
 
         # 持久化meta数据-----------
-        cache_meta = load_dump(CACHE_META_FILE)
+        cache_meta = load_dump(CACHE_META_FILE, target_day)
         cache_meta.is_finished = False
         # 更新last_id
         if cache_meta.last_id == '':
@@ -94,13 +99,13 @@ def write_cache(maxid, page):
         cache_meta.files.sort(reverse=True)
         print(cache_meta.files)
         # 持久化
-        write_cache_meta(cache_meta)
+        write_cache_meta(cache_meta, target_day)
     except Exception as e:
         print(repr(e))
     print('-' * 10 + '缓存数据结束')
 
-def write_cache_meta(cache_meta):
-    dump(cache_meta, CACHE_META_FILE)
+def write_cache_meta(cache_meta, target_day=''):
+    dump(cache_meta, CACHE_META_FILE, target_day)
 
 def _get_cachepath(path, target_day=''):
     if target_day == '':
@@ -114,10 +119,10 @@ def _get_cache_data_filename(maxid):
     return CACHE_DATA_FILE.replace('{id}', str(maxid))
 
 # 数据序列化并持久化
-def dump(data, filename):
+def dump(data, filename, target_day=''):
     serialized_data = pickle.dumps(data)
 
-    PATH = _get_cachepath(CACHE_PATH)
+    PATH = _get_cachepath(CACHE_PATH, target_day)
     if not os.path.exists(PATH):
         os.makedirs(PATH)
     # 打开文件
@@ -142,4 +147,5 @@ def remove_cache_files(files, target_day=''):
     print('删除cache data文件 ' + target_day)
     path = _get_cachepath(CACHE_PATH, target_day)
     for file in files:
-        os.remove(path+'/'+file)
+        if os.path.exists(path+'/'+file):
+            os.remove(path+'/'+file)

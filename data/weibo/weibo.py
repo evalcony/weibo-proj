@@ -56,7 +56,7 @@ class Weibo:
         else:
             return TimelineCollector()
     
-    def get_page_list(self, max_id=0):
+    def get_page_list(self, max_id=0, target_day=''):
         page_list = []
         end_point = False
         while True:
@@ -78,7 +78,7 @@ class Weibo:
             max_id = page.winfo_list[0].id
 
             # 将每个page数据缓存
-            wb_local_cache.write_cache(max_id, page)
+            wb_local_cache.write_cache(max_id, page, target_day)
 
             page_list.append(page)
             max_id = page.max_id
@@ -218,7 +218,7 @@ class Weibo:
         if cache_meta.is_finished:
             return True
         # 如果未完成，则优先将cache直到上一次结束点的数据全部获取
-        tuple = self.get_page_list(cache_meta.last_id)
+        tuple = self.get_page_list(cache_meta.last_id, target_day)
         end_point = tuple[1]
         # 如果未读到结束点
         if not end_point:
