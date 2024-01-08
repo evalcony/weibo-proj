@@ -19,11 +19,11 @@ class CacheMeta:
 # todo
 # 隔天处理的问题，需要注意
 
-def done():
+def done(target_day=''):
 
     # 删除相关数据
-    cache_meta = read_cache_meta()
-    remove_cache_files(cache_meta.files)
+    cache_meta = read_cache_meta(target_day)
+    remove_cache_files(cache_meta.files, target_day)
 
     # 重置cache_meta
     cache_meta = CacheMeta()
@@ -31,16 +31,16 @@ def done():
     write_cache_meta(cache_meta)
 
 # 加载所有cache，并自动合并
-def read_cache():
+def read_cache(target_day=''):
 
     # 加载meta数据
-    cache_meta = read_cache_meta()
+    cache_meta = read_cache_meta(target_day)
 
     # 根据cache_meta.files数组，加载所有dump文件数据
     total_page_list = []
     for file in cache_meta.files:
         # 合并各个dump文件
-        tmp_page = load_dump(file)
+        tmp_page = load_dump(file, target_day)
         total_page_list.append(tmp_page)
     # 根据 sort_func 降序排序
     res_page_list = sorted(total_page_list, key=sort_func, reverse=True)
@@ -48,8 +48,8 @@ def read_cache():
     # 返回page_list
     return res_page_list
 
-def read_cache_meta():
-    return load_dump(CACHE_META_FILE)
+def read_cache_meta(target_day=''):
+    return load_dump(CACHE_META_FILE, target_day=target_day)
 
 def sort_func(page):
     return page.max_id
@@ -102,10 +102,13 @@ def write_cache(maxid, page):
 def write_cache_meta(cache_meta):
     dump(cache_meta, CACHE_META_FILE)
 
-def _get_cachepath(path):
-    time.time()
-    ymd = time.strftime("%Y-%m-%d")
-    return path.replace('{date}', ymd)
+def _get_cachepath(path, target_day=''):
+    if target_day == '':
+        time.time()
+        ymd = time.strftime("%Y-%m-%d")
+        return path.replace('{date}', ymd)
+    else:
+        return path.replace('{date}', target_day)
 
 def _get_cache_data_filename(maxid):
     return CACHE_DATA_FILE.replace('{id}', str(maxid))
@@ -122,8 +125,8 @@ def dump(data, filename):
         # 将序列化后的对象写入文件
         f.write(serialized_data)
 
-def load_dump(filename):
-    dir = _get_cachepath(CACHE_PATH)+'/'+filename
+def load_dump(filename, target_day=''):
+    dir = _get_cachepath(CACHE_PATH, target_day)+'/'+filename
     if not os.path.exists(dir):
         print(dir)
         return CacheMeta()
@@ -135,8 +138,8 @@ def load_dump(filename):
         deserialized_data = pickle.loads(serialized_data)
         return deserialized_data
 
-def remove_cache_files(files):
-    print('删除cache data文件')
-    path = _get_cachepath(CACHE_PATH)
+def remove_cache_files(files, target_day=''):
+    print('删除cache data文件 ' + target_day)
+    path = _get_cachepath(CACHE_PATH, target_day)
     for file in files:
         os.remove(path+'/'+file)

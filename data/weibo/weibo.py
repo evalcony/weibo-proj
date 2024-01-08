@@ -213,8 +213,8 @@ class Weibo:
         self.solve_latest()
 
 
-    def solve_cache(self):
-        cache_meta = wb_local_cache.read_cache_meta()
+    def solve_cache(self, target_day=''):
+        cache_meta = wb_local_cache.read_cache_meta(target_day)
         if cache_meta.is_finished:
             return True
         # 如果未完成，则优先将cache直到上一次结束点的数据全部获取
@@ -227,14 +227,14 @@ class Weibo:
         print('--------------solve_cache() 结束点 --------------')
 
         # 读取全量cache_page_list数据。因为上面的page_list是[截断点 -> 结束点]直接的数据
-        cache_page_list = wb_local_cache.read_cache()
+        cache_page_list = wb_local_cache.read_cache(target_day)
 
         if len(cache_page_list) == 0:
             print('cache_page_list=[]，结束')
             return False
 
         # 数据处理+更新 config, cache_meta
-        self.process_data_and_update_config(cache_page_list)
+        self.process_data_and_update_config(cache_page_list, target_day)
 
         # 重新读取配置，更新内存中的相关配置
         self.read_from_config()
@@ -252,11 +252,11 @@ class Weibo:
         # 数据处理+更新 config, cache_meta
         self.process_data_and_update_config(page_list)
 
-    def process_data_and_update_config(self, page_list):
+    def process_data_and_update_config(self, page_list, target_day=''):
         # 数据处理
         for p in self.processor_list:
             try:
-                p.work(page_list)
+                p.work(page_list, target_day)
             except Exception as e:
                 print(repr(e))
                 return
@@ -267,7 +267,7 @@ class Weibo:
         self.update_config(last_id, last_created_at)
 
         # 更新cache_meta数据，重置cache_meta
-        wb_local_cache.done()
+        wb_local_cache.done(target_day)
 
         print('本次批次全部执行完毕')
 

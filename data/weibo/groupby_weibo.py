@@ -37,12 +37,12 @@ class GroupByWeibo:
         except:
             return {}
 
-    def work(self, page_list):
+    def work(self, page_list, target_day=''):
         # 根据 screen_name 进行分组
         for page in page_list:
             self.group(page)
         # save group
-        self.save_group()
+        self.save_group(target_day)
 
     def group(self, page):
         if self.user_group_set == {}:
@@ -58,12 +58,14 @@ class GroupByWeibo:
                         self.result_dict[g_name] = []
                     self.result_dict[g_name].append(winfo)
 
-    def save_group(self):
+    def save_group(self, target_day=''):
         if self.result_dict == {}:
             return
         print('分组写文件开始')
         now = datetime.now()
         time_str = now.strftime('%Y-%m-%d')
+        if target_day != '':
+            time_str = target_day
 
         for name, w_list in self.result_dict.items():
             self._save_infront(time_str, name+'.html', w_list)
