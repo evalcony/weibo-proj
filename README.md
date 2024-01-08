@@ -37,6 +37,7 @@ tools
 - ping_test.py 用于网络检测的程序。快速检测接口是否能 ping 通
 - fbw_manager.py 对 forbidden_words.txt 的文件的操作程序，可以在终端中以命令行的方式操作 forbidden_words.txt 文件数据
 - config_manager.py 操作config.ini
+- finish_target_day_cache.py 用于每日job，检查前一天cache是否全部处理完毕，若没有则自动处理前一天cache。此工具也可用于手动完成特定日期的缓存数据落地。
 
 各程序的执行参数，可以通过 -h 查看。
 
