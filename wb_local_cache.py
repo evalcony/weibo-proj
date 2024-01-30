@@ -1,6 +1,7 @@
 import os
 import time
 import pickle
+import argparse
 
 CACHE_META_FILE = 'cache_meta.pkl'
 CACHE_DATA_FILE = 'data_{id}.pkl'
@@ -149,3 +150,14 @@ def remove_cache_files(files, target_day=''):
     for file in files:
         if os.path.exists(path+'/'+file):
             os.remove(path+'/'+file)
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-d', type=str, default='', help='日期')
+    args = parser.parse_args()
+
+    if args.d != '':
+        page_list = read_cache(args.d)
+        for page in page_list:
+            for winfo in page.winfo_list:
+                print(winfo.as_weibo())
