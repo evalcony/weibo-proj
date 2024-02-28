@@ -151,7 +151,9 @@ def remove_cache_files(files, target_day=''):
         if os.path.exists(path+'/'+file):
             os.remove(path+'/'+file)
 
-if __name__ == '__main__':
+# 读取指定日期的cache历史数据
+# 语法 py wb_local_cache -d yyyy-MM-dd > ~/Desktop/temp.txt
+def read_history_cache():
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', type=str, default='', help='日期')
     args = parser.parse_args()
@@ -161,3 +163,6 @@ if __name__ == '__main__':
         for page in page_list:
             for winfo in page.winfo_list:
                 print(winfo.as_weibo())
+
+if __name__ == '__main__':
+    read_history_cache()
