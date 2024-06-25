@@ -2,6 +2,7 @@ import os
 import time
 import pickle
 import argparse
+from data.weibo.groupby_weibo import GroupByWeibo
 
 CACHE_META_FILE = 'cache_meta.pkl'
 CACHE_DATA_FILE = 'data_{id}.pkl'
@@ -152,10 +153,13 @@ def remove_cache_files(files, target_day=''):
             os.remove(path+'/'+file)
 
 # 读取指定日期的cache历史数据
-# 语法 py wb_local_cache -d yyyy-MM-dd > ~/Desktop/temp.txt
+# 语法 py wb_local_cache.py -d yyyy-MM-dd > ~/Desktop/temp.txt
+# 语法 py wb_local_cache.py -d yyyy-MM-dd -f > ~/Desktop/temp.txt
+# -f 命令会自动将数据写入当天export数据中。但是不会删除 cache 文件，需要手动删除。
 def read_history_cache():
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', type=str, default='', help='日期')
+    parser.add_argument('-f', action='store_true', help='写入当天文件')
     args = parser.parse_args()
 
     if args.d != '':
@@ -163,6 +167,10 @@ def read_history_cache():
         for page in page_list:
             for winfo in page.winfo_list:
                 print(winfo.as_weibo())
+
+        if args.f:
+            p = GroupByWeibo()
+            p.work(page_list, args.d)
 
 if __name__ == '__main__':
     read_history_cache()

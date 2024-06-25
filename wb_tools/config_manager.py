@@ -29,6 +29,7 @@ def update(update_param):
     if section == 'WEIBO' and option == 'cookie':
         values = value.split(';')
         for v in values:
+            # 自动更新short_token字段
             if v.find('mweibo_short_token') != -1:
                 token_arr = v.split('=')
                 config.set(section, 'token', token_arr[1].strip())
