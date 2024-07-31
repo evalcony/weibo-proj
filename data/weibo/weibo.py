@@ -111,6 +111,13 @@ class Weibo:
         print(f'{d1} < {d2} = {is_smaller}')
         return is_smaller
 
+    def is_expire(self):
+        text = self.request_for_pages(0)
+        return text.find('passport.weibo.cn') != -1
+    
+    def name(self):
+        return "微博"
+
     # 发送 HTTP 请求
     def request_for_pages(self, max_id):
 

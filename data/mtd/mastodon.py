@@ -66,6 +66,13 @@ class Mastodon:
 
         print('更新config.ini完成')
 
+    def is_expire(self):
+        text = self.request_for_pages(0)
+        return not (len(text) > 0)
+
+    def name(self):
+        return "mastodon"
+
     def request_for_pages(self, max_id):
         url = 'https://cr8r.gg/api/v1/timelines/home'
         if max_id != 0:

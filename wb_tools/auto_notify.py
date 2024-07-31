@@ -1,62 +1,54 @@
 import sys
-
 import requests
 import os
 from datetime import datetime
-
 import utils
-from data.weibo import weibo
-from data.mtd.mastodon import Mastodon
 
 # 读取配置
 config = utils.read_config('config.ini')
 AUTO_NOTIFY = config['AUTO_NOTIFY']
 
-def work():
 
+def work(task_list):
     # 自动通知开关
     NOTIFY_SWITCH = AUTO_NOTIFY['notify_switch']
     if NOTIFY_SWITCH != 'y':
         return
 
+    # 过期检测
     notify_msg = ''
     expired = False
     try:
-        wb = weibo.Weibo()
-        text = wb.request_for_pages(0)
-        if text.find('passport.weibo.cn') != -1:
-            notify_msg = notify_msg + ('微博过期\n')
-            notify_msg = notify_msg + text + '\n'
-            expired = True
-        mastodon = Mastodon()
-        text = mastodon.request_for_pages(0)
-        # 略
-        if text.find(''):
-            notify_msg = notify_msg + ('mastodon过期\n')
-            expired = True
-    except Exception:
+        print('len(task_list) = ' + str(len(task_list)))
+        for agent in task_list:
+            agt_exp = agent.is_expire()
+            print(f'{agent.name()}.is_expire:{agt_exp}')
+            if agt_exp:
+                notify_msg = notify_msg + agent.name()+"过期\n"
+                expired = True
+    except Exception as e:
+        print(e)
         notify_msg = notify_msg + ('【weibo-proj】网络请求异常')
 
-    notify_msg = notify_msg + str(datetime.now()) + '\n'
-    print(notify_msg)
-
-    # send notify
+    # 如果过期了，发送系统通知消息
     if expired:
-        params = {
-            'title': '【weibo-proj】过期信息:',
-            'content': notify_msg,
-        }
-
-        # macOS系统通知
-        sys_notify('【weibo-proj】过期信息', '微博过期')
-
-        # 自动通知接口地址
-        NOTIFY_URL = AUTO_NOTIFY['url']
-        response = requests.get(NOTIFY_URL, params=params)
-        print(response.text)
-    else:
-        print('接口正常，未过期')
+        notify_msg = notify_msg + str(datetime.now()) + '\n'
+        send_notify(notify_msg)
     return expired
+
+def send_notify(notify_msg):
+    params = {
+        'title': '【weibo-proj】过期信息:',
+        'content': notify_msg,
+    }
+
+    # macOS系统通知
+    sys_notify('【weibo-proj】过期信息', '微博过期')
+
+    # 自动通知接口地址
+    NOTIFY_URL = AUTO_NOTIFY['url']
+    response = requests.get(NOTIFY_URL, params=params)
+    print(response.text)
 
 def sys_notify(title, content):
     MAC_SYS_NOTIFY = AUTO_NOTIFY['mac_sys_notify']
