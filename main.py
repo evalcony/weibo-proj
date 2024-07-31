@@ -12,18 +12,23 @@ def task(task_list):
             auto_notify.sys_notify('调用异常',t.__class__.__name__+'调用异常，请即时处理')
 
 def init():
+    
     # 读取配置
     config = utils.read_config('config.ini')
-    wb_switch = config['WEIBO']['switch']
-    mtd_switch = config['MASTODON']['switch']
-    mastodon_cron = config['MASTODON']['cron']
-
+    channel = config['CHANNEL']['list'].split(',')
     task_list = []
-    if wb_switch == 'y':
-        task_list.append(Weibo())
-    if mtd_switch == 'y' and (mastodon_cron == 'default' or utils.is_time_scheduled(mastodon_cron)):
-        task_list.append(Mastodon())
+    for chn in channel:
+        switch = config[chn]['switch']
+        cron = config[chn]['cron']
+        if switch == 'y' and (cron == 'default' or utils.is_time_scheduled(cron)):
+            task_list.append(builder(chn))
     return task_list
+
+def builder(chn):
+    if chn == 'WEIBO':
+        return Weibo()
+    if chn == 'MASTODON':
+        return Mastodon()
 
 if __name__ == '__main__':
     # 网络环境检测。如果无网络环境，则直接退出。
