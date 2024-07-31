@@ -2,6 +2,7 @@ import configparser
 import random
 import os
 from datetime import datetime
+import croniter
 
 def read_config(name):
     # 创建 ConfigParser 对象
@@ -80,6 +81,18 @@ def is_smaller_than(date1, date2):
 
 def random_num(l, r):
     return random.randint(l, r)
+
+# 判断当前时间是否满足定时任务执行表达式
+def is_time_scheduled(cron_expression):
+    # 获取当前时间
+    now = datetime.datetime.now()
+    # 创建cron迭代器
+    ci = croniter.croniter(cron_expression, now)
+    # 获取下一个执行时间
+    next_time = ci.get_next(datetime.datetime)
+    # 判断当前时间是否是执行时间
+    return now == next_time
+
 
 if __name__ == '__main__':
 

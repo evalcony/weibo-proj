@@ -25,7 +25,7 @@ class Mastodon:
         self.timeline_url = config['MASTODON']['timeline_url']
         self.auth_key = config['MASTODON']['auth_key']
         self.proxy_switch = config['MASTODON']['proxy_switch']
-
+        self.cron = config['MASTODON']['cron']
         # 代理服务器
         self.proxy = {
             "http": config['PROXY']['http_proxy'], 
@@ -38,6 +38,7 @@ class Mastodon:
         print("auth_key：" + self.auth_key)
         print("是否使用代理：" + self.proxy_switch)
         print("代理服务器地址：" + self.proxy["https"])
+        print("定时任务频次：" + self.cron)
         print('mastodon config------------------------------------------------------')
 
     def to_set(self):
@@ -154,6 +155,7 @@ class Mastodon:
             path = img_export_path+'/'+filename
             with open(path, "wb") as out_file:
                 shutil.copyfileobj(response.raw, out_file)
+            del response
             print('保存成功 ' + path)
 
     # 基于 created_at 来判断是否要继续拉取数据
@@ -209,7 +211,16 @@ class Mastodon:
         print("*" * 20)
         return page, continuable
 
+    def cronable(self):
+        if self.cron == 'default' or self.cron == '':
+            return True
+        return utils.is_time_scheduled(self.cron)
+
     def processor_work(self):
+        # cron
+        if not self.cronable():
+            print('不满足表达式，定时任务不执行')
+            return
 
         page_list = self.get_page_list()
         if len(page_list) == 0:
