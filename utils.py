@@ -85,11 +85,11 @@ def random_num(l, r):
 # 判断当前时间是否满足定时任务执行表达式
 def is_time_scheduled(cron_expression):
     # 获取当前时间
-    now = datetime.datetime.now()
+    now = datetime.now()
     # 创建cron迭代器
     ci = croniter.croniter(cron_expression, now)
     # 获取下一个执行时间
-    next_time = ci.get_next(datetime.datetime)
+    next_time = ci.get_next(datetime)
     # 判断当前时间是否是执行时间
     return now == next_time
 

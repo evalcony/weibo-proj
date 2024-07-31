@@ -211,16 +211,7 @@ class Mastodon:
         print("*" * 20)
         return page, continuable
 
-    def cronable(self):
-        if self.cron == 'default' or self.cron == '':
-            return True
-        return utils.is_time_scheduled(self.cron)
-
     def processor_work(self):
-        # cron
-        if not self.cronable():
-            print('不满足表达式，定时任务不执行')
-            return
 
         page_list = self.get_page_list()
         if len(page_list) == 0:

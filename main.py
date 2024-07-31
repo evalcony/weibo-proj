@@ -4,14 +4,16 @@ from data.weibo.weibo import Weibo
 import utils
 
 def task():
-
-    wb_switch = utils.read_config('config.ini')['WEIBO']['switch']
-    mtd_switch = utils.read_config('config.ini')['MASTODON']['switch']
+    # 读取配置
+    config = utils.read_config('config.ini')
+    wb_switch = config['WEIBO']['switch']
+    mtd_switch = config['MASTODON']['switch']
+    mastodon_cron = config['MASTODON']['cron']
 
     task_list = []
     if wb_switch == 'y':
         task_list.append(Weibo())
-    if mtd_switch == 'y':
+    if mtd_switch == 'y' and (mastodon_cron == 'default' or utils.is_time_scheduled(mastodon_cron)):
         task_list.append(Mastodon())
 
     for t in task_list:
