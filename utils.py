@@ -1,7 +1,7 @@
 import configparser
 import random
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 import croniter
 
 def read_config(name):
@@ -88,10 +88,21 @@ def is_time_scheduled(cron_expression):
     now = datetime.now()
     # 创建cron迭代器
     ci = croniter.croniter(cron_expression, now)
+
+    # 获取上一个触发时间
+    previous_time = ci.get_prev(datetime)
     # 获取下一个执行时间
     next_time = ci.get_next(datetime)
+
+    # 允许的误差范围，单位是秒
+    tolerance = timedelta(seconds=5)
+
+    # 判断当前时间是否在误差范围内
+    is_match = previous_time <= now <= (previous_time + tolerance) \
+    or next_time <= now <= (next_time + tolerance)
+
     # 判断当前时间是否是执行时间
-    return now == next_time
+    return is_match
 
 
 if __name__ == '__main__':
