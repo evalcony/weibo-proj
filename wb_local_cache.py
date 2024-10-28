@@ -159,8 +159,18 @@ def remove_cache_files(files, target_day=''):
 def read_history_cache():
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', type=str, default='', help='日期')
+    parser.add_argument('-meta', type=str, default='', help='日期')
     parser.add_argument('-f', action='store_true', help='写入当天文件')
     args = parser.parse_args()
+
+    if args.meta != '':
+        target_day = args.meta
+        cache_meta = read_cache_meta(target_day)
+        print(cache_meta.begin_id)
+        print(cache_meta.last_id)
+        print(cache_meta.is_finished)
+        # cache_meta.is_finished = True
+        # write_cache_meta(cache_meta, target_day)
 
     if args.d != '':
         page_list = read_cache(args.d)
