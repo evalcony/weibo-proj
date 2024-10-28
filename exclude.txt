@@ -1,0 +1,6 @@
+.git/
+.gitignore
+config/config.ini
+logs/
+cache/
+test/
