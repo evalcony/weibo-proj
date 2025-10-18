@@ -112,6 +112,7 @@ class Mastodon:
 
     def save_group(self):
         if self.result_dict == {}:
+            print('result_dict is empty')
             return
         print('mastodon分组写文件开始')
         now = datetime.now()
@@ -222,6 +223,7 @@ class Mastodon:
 
         page_list = self.get_page_list()
         if len(page_list) == 0:
+            print(f'len(page_list)={len(page_list)}')
             return
         for page in page_list:
             if len(page) == 0:
