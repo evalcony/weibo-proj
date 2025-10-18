@@ -61,7 +61,7 @@ def ping(args):
     if args.b:
         text = request_for_baidu()
 
-    print(text[:100])
+    print(text)
         
 
 if __name__ == '__main__':
