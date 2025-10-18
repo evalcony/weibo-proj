@@ -74,7 +74,7 @@ class Mastodon:
         return "mastodon"
 
     def request_for_pages(self, max_id):
-        url = 'https://cr8r.gg/api/v1/timelines/home'
+        url = 'alive.bar/api/v1/timelines/home'
         if max_id != 0:
             url = url + '?max_id=' + str(max_id)
         headers = {
